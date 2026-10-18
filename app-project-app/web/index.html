@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Timetable Maker (7 Periods)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body data-theme="light">
+    <div class="app-container">
+        <!-- Official Printable Header (Visible Only in Print/Export) -->
+        <div class="print-header">
+            <h2>SRM INSTITUTE OF SCIENCE AND TECHNOLOGY, VADAPALANI CAMPUS</h2>
+            <h3>DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING</h3>
+            <p><strong>Class &amp; Sec:</strong> II CSE A &bull; <strong>Sem:</strong> III &bull; <strong>Classroom:</strong> BW106 &bull; <strong>Academic Year:</strong> 2026-2027</p>
+        </div>
+
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <div class="brand">
+                <div class="brand-icon">🗓️</div>
+                <div>
+                    <h1 class="brand-title">Smart Timetable Maker</h1>
+                    <p class="brand-subtitle">7 Periods &bull; Morning Break &amp; Lunch Break &bull; Java Backend</p>
+                </div>
+            </div>
+
+            <div class="nav-metrics">
+                <div class="metric-badge">
+                    <span class="metric-num" id="stat-subjects-count">0</span>
+                    <span class="metric-tag">Subjects</span>
+                </div>
+                <div class="metric-badge">
+                    <span class="metric-num" id="stat-slots-count">0</span>
+                    <span class="metric-tag">Periods</span>
+                </div>
+                <div class="conflict-status-pill no-conflict" id="conflict-pill">
+                    <span class="pulse-dot"></span>
+                    <span id="conflict-status-text">0 Conflicts</span>
+                </div>
+                <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Action Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button id="btn-auto-generate" class="btn btn-primary">
+                    <span class="btn-icon-text">✨</span> Auto-Generate Smart Timetable
+                </button>
+                <button id="btn-add-slot" class="btn btn-secondary">
+                    <span>➕</span> Add Class
+                </button>
+                <button id="btn-manage-subjects" class="btn btn-secondary">
+                    <span>📚</span> Manage Subjects (<span id="subject-btn-count">0</span>)
+                </button>
+            </div>
+            <div class="toolbar-right">
+                <button id="btn-clear-all" class="btn btn-ghost danger-text" title="Clear entire timetable">
+                    <span>🗑️</span> Clear
+                </button>
+                <button id="btn-print" class="btn btn-ghost" title="Print or save as PDF">
+                    <span>🖨️</span> Print / Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Conflict & Smart Insights Banner -->
+        <div id="insight-banner" class="insight-banner success-banner">
+            <div class="insight-icon">💡</div>
+            <div class="insight-content" id="insight-message">
+                <strong>Schedule Optimal:</strong> All 7 periods balanced. Morning break (10:30–10:50) and lunch break (12:30–13:15) preserved.
+            </div>
+        </div>
+
+        <!-- Main Timetable Grid -->
+        <main class="timetable-card">
+            <div class="timetable-scroll-wrapper">
+                <table class="timetable-table" id="timetable-table">
+                    <thead>
+                        <tr>
+                            <th class="time-col-header">Period &amp; Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetable-body">
+                        <!-- Rendered dynamically by app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Smart Timetable Maker (7 Periods) &bull; Built with standard Java <code>com.sun.net.httpserver</code> &bull; BlueJ Compatible.</p>
+        </footer>
+    </div>
+
+    <!-- Modal: Add / Schedule Custom Slot -->
+    <div id="modal-add-slot" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>Add Class Period</h2>
+                <button class="close-modal" data-close="modal-add-slot">&times;</button>
+            </div>
+            <form id="form-add-slot" class="modal-form">
+                <div class="form-group">
+                    <label>Subject</label>
+                    <select id="slot-subject-select" class="form-input" required>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Day of Week</label>
+                        <select id="slot-day-select" class="form-input" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>7-Period Time Slot</label>
+                        <select id="slot-period-select" class="form-input" required>
+                            <option value="08:00-08:50">Period 1 (08:00 - 08:50)</option>
+                            <option value="08:50-09:40">Period 2 (08:50 - 09:40)</option>
+                            <option value="09:40-10:30">Period 3 (09:40 - 10:30)</option>
+                            <option value="10:50-11:40">Period 4 (10:50 - 11:40)</option>
+                            <option value="11:40-12:30">Period 5 (11:40 - 12:30)</option>
+                            <option value="13:15-14:00">Period 6 (13:15 - 14:00)</option>
+                            <option value="14:00-14:45">Period 7 (14:00 - 14:45)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Assigned Room</label>
+                        <input type="text" id="slot-room-input" class="form-input" value="BW106" placeholder="e.g. BW106, Lab 101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor / Faculty</label>
+                        <input type="text" id="slot-teacher-input" class="form-input" placeholder="e.g. Dr. K. Akila" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" data-close="modal-add-slot">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Schedule Class</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Manage Subjects -->
+    <div id="modal-manage-subjects" class="modal-overlay">
+        <div class="modal-box modal-large">
+            <div class="modal-header">
+                <h2>Manage Course Subjects</h2>
+                <button class="close-modal" data-close="modal-manage-subjects">&times;</button>
+            </div>
+            <div class="subjects-modal-content">
+                <!-- Add new subject section -->
+                <div class="add-subject-section">
+                    <h3>Add New Subject</h3>
+                    <form id="form-add-subject" class="subject-form-grid">
+                        <input type="text" id="sub-name" class="form-input" placeholder="Course Name (e.g. Machine Learning)" required>
+                        <input type="text" id="sub-code" class="form-input" placeholder="Mnemonic/Code (e.g. ML)" required>
+                        <input type="text" id="sub-teacher" class="form-input" placeholder="Faculty (e.g. Dr. Sharma)" required>
+                        <input type="text" id="sub-room" class="form-input" placeholder="Room (e.g. BW106)" value="BW106" required>
+                        <div class="form-inline-group">
+                            <label class="form-label-compact">Weekly Hours:</label>
+                            <input type="number" id="sub-hours" class="form-input hours-input" min="1" max="10" value="3" required>
+                        </div>
+                        <div class="form-inline-group">
+                            <label class="form-label-compact">Color:</label>
+                            <input type="color" id="sub-color" class="color-picker" value="#3b82f6">
+                        </div>
+                        <button type="submit" class="btn btn-primary add-sub-btn">Add Subject</button>
+                    </form>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Current subjects table -->
+                <h3>Configured Subjects</h3>
+                <div class="subjects-list-wrapper">
+                    <table class="subjects-table">
+                        <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Course</th>
+                                <th>Mnemonic</th>
+                                <th>Faculty</th>
+                                <th>Room</th>
+                                <th>Hours/Wk</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjects-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" data-close="modal-manage-subjects">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

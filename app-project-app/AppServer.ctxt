@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.target=AppServer
+comment0.text=\r\n\ AppServer\ -\ Plain\ Java\ Backend\ for\ the\ Smart\ Timetable\ Maker\ (7\ Periods).\r\n\ \r\n\ Runs\ a\ standalone\ HTTP\ server\ using\ Java's\ built-in\ HttpServer.\r\n\ Fully\ compatible\ with\ BlueJ\ and\ any\ standard\ JDK\ (8+).\r\n
+comment1.params=port
+comment1.target=com.sun.net.httpserver.HttpServer\ startServer(int)
+comment2.params=args
+comment2.target=void\ main(java.lang.String[])
+comment3.params=exchange
+comment3.target=boolean\ handleOptions(com.sun.net.httpserver.HttpExchange)
+comment4.params=exchange
+comment4.target=java.lang.String\ readBody(com.sun.net.httpserver.HttpExchange)
+comment5.params=json\ field
+comment5.target=java.lang.String\ extractField(java.lang.String,\ java.lang.String)
+comment6.params=query\ param
+comment6.target=java.lang.String\ getQueryParam(java.lang.String,\ java.lang.String)
+comment7.params=exchange\ statusCode\ contentType\ response
+comment7.target=void\ sendResponse(com.sun.net.httpserver.HttpExchange,\ int,\ java.lang.String,\ java.lang.String)
+comment8.params=str
+comment8.target=java.lang.String\ escapeJson(java.lang.String)
+numComments=9

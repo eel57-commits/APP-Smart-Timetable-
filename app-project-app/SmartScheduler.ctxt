@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=SmartScheduler
+comment0.text=\r\n\ SmartScheduler\ -\ Constraint-based\ scheduling\ engine.\r\n\ \r\n\ Automatically\ generates\ a\ balanced,\ conflict-free\ weekly\ timetable\:\r\n\ 1.\ Honors\ weekly\ credit\ hours\ for\ each\ subject.\r\n\ 2.\ Balances\ subjects\ evenly\ across\ weekdays\ (avoids\ clustering\ all\ hours\ in\ one\ day).\r\n\ 3.\ Prevents\ teacher\ conflicts\ (one\ teacher\ cannot\ be\ in\ two\ places\ at\ once).\r\n\ 4.\ Prevents\ room\ collisions.\r\n\ 5.\ Guarantees\ a\ universal\ lunch\ break\ from\ 12\:00\ to\ 13\:00.\r\n\ 6.\ Limits\ same-subject\ sessions\ to\ at\ most\ 2\ consecutive\ periods.\r\n
+comment1.params=subjects
+comment1.target=java.util.List\ generateTimetable(java.util.List)
+comment1.text=\r\n\ Generates\ an\ optimized\ list\ of\ timetable\ slots\ given\ the\ list\ of\ subjects.\r\n
+comment2.params=subjects\ remainingHours\ day\ periodIndex\ existingSlots\ daySubjectCount
+comment2.target=Subject\ selectBestSubject(java.util.List,\ java.util.Map,\ java.lang.String,\ int,\ java.util.List,\ java.util.Map)
+numComments=3
